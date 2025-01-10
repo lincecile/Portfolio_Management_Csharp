@@ -1,0 +1,287 @@
+﻿@page "/Creation"
+
+@using PortfolioTracking.Models
+@using PortfolioTracking.Services
+@using PortfolioTracking.Component
+
+@inject PortfolioService PortfolioService
+
+<PageTitle>Création de Portefeuille</PageTitle>
+
+<div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 10px;">
+
+    <h1>Création du Portefeuille</h1>
+
+    <div style="margin-right: 20px; font-weight: bold; background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        Valeur totale des actifs du portefeuille : @(PortfolioService.ValeurTotale() + PortfolioService.CashAmount()) €
+    </div>
+</div>
+
+<h4> Ajouter/Retirer du Cash dans le Portefeuille</h4>
+<div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 10px;">
+    <div style="width: 60%; margin-right: 20px; margin-left: 20px;">
+        <div>
+            <label for="CashLevel">Montant de Cash:</label>
+            <input id="CashLevel" type="number" @bind="cashAmount" required />
+        </div>
+        <br />
+        <button class="btn btn-primary" @onclick="AjouterCash">Ajouter Cash</button>
+        <button class="btn btn-danger" @onclick="RetirerCash">Retirer Cash</button>
+        <br />
+        <br />
+    </div>
+    
+    <br />
+    <br />
+    <div style="margin-right: 20px; font-weight: bold; background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        Niveau de Cash disponible: @PortfolioService.CashAmount() €
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(messagecash))
+{
+    <div class="alert alert-info">@messagecash</div>
+}
+<hr />
+
+<br />
+<h4>Ajouter/Vendre un Actif dans le Portefeuille</h4>
+<div style="display: flex; align-items: flex-start;">
+    <div style="width: 40%; margin-right: 20px; margin-left: 20px;">
+        
+        <div>
+            <label for="ticker">Ticker de l'Actif:</label>
+            <select id="ticker" @onchange="HandleChange" required>
+                <option value="">--Sélectionner--</option>
+                @foreach (var item in tickers)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+        <br />
+        <div>
+            <label for="buyPrice">Prix:</label>
+            <input id="buyPrice" type="number" @bind="newAsset.BuyPrice" required />
+        </div>
+        <br />
+        <div>
+            <label for="datePrice">Date du Prix:</label>
+            <input id="datePrice" type="date" @bind="newAsset.DatePrice" required />
+        </div>
+        <br />
+        <div>
+            <label for="quantity">Quantité:</label>
+            <input id="quantity" type="number" @bind="newAsset.Quantite" required />
+        </div>
+
+        <br />
+        <button class="btn btn-primary" @onclick="AjouterAsset">Ajouter un actif</button>
+        <button class="btn btn-primary" @onclick="VendreAsset">Vendre un actif</button>
+        <br />
+
+        <br />
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 10px;">
+            <div style="margin-right: 20px; font-weight: bold; background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                Valeur totale des actifs non cash : @PortfolioService.ValeurTotale() €
+            </div>
+        </div>
+    </div>
+
+    <div style="width: 48%;">
+        <PortfolioLineChart TickerSelected="@newAsset.Ticker" />
+    </div>
+</div>
+<br />
+
+<h3>Actifs dans le Portefeuille</h3>
+
+<head>
+    <style>
+        .table td, .table th {
+            text-align: center; /* Centre le texte dans les cellules de la table */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th>Ticker</th>
+                    <th>Prix</th>
+                    <th>Date du Prix (F)</th>
+                    <th>Quantité</th>
+                    <th>Valeur absolue</th>
+                    <th>Valeur relative</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                @foreach (var asset in PortfolioService.GetAssets())
+                {
+                    <tr>
+                        <td>@asset.Ticker</td>
+                        <td>@Math.Round(asset.BuyPrice, 2) $</td>
+                        <td>@asset.DatePrice.ToShortDateString()</td>
+                        <td>@asset.Quantite</td>
+                        <td>@Math.Round(asset.ValeurTotalActif, 2) $</td>
+                        <td>@Math.Round((asset.ValeurTotalActif / PortfolioService.ValeurTotale()) * 100, 2)%</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => SupprimerAsset(asset.Ticker)">Supprimer</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info">@message</div>
+}
+
+@code {
+    private Cash newCash = new Cash(); // Initialisation du cash
+    private Asset newAsset = new Asset(); // Initialisation de l'actif
+    private List<string> tickers = new List<string>(); // Variable pour stocker les tickers
+    private string message = ""; // Variable pour les messages à afficher à l'utilisateur
+    private string selectedValue = ""; // ticker sélectionné par l'utilisateur
+    private string messagecash = ""; // Variable pour les messages à afficher à l'utilisateur concernant le cash
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Récupérer les noms des fichiers CSV de manière asynchrone
+        tickers = await PortfolioService.GetNomsFichiersCsvAsync();
+    }
+
+    // prise en compte du changement de ticker fait par l'utilisateur
+    private void HandleChange(ChangeEventArgs e)
+    {
+        selectedValue = e.Value.ToString();
+        newAsset.Ticker = selectedValue; // Update selected ticker
+    }
+
+    private void AjouterAsset()
+    {
+       
+        if (!string.IsNullOrWhiteSpace(newAsset.Ticker) && newAsset.BuyPrice > 0 && (newAsset.BuyPrice * newAsset.Quantite <= PortfolioService.CashAmount()))
+        {
+            bool added = PortfolioService.AjouterAssetSiPresent(newAsset.Ticker, newAsset.BuyPrice, newAsset.DatePrice, newAsset.Quantite);
+            if (added)
+            {
+                PortfolioService.SubtractCash(newAsset.BuyPrice * newAsset.Quantite);
+                message = "Actif ajouté avec succès.";
+
+            }
+            else
+            {
+                message = "L'actif n'est pas présent dans le portefeuille.";
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(newAsset.Ticker) && newAsset.BuyPrice < 0)
+        {
+            message = "Le prix d'un actif ne peut être négatif, veuillez vérifier votre saisie.";
+        }
+        else if (!string.IsNullOrWhiteSpace(newAsset.Ticker) && newAsset.Quantite <= 0)
+        {
+            message = "Veuillez saisir une quantité positive. Si vous souhaitez vendre, veuillez choisir l'option de vente.";
+        }
+        else if (newAsset.BuyPrice * newAsset.Quantite > PortfolioService.CashAmount())
+        {
+            message = "Le niveau de cash est insuffisant pour permettre l'achat.";
+        }
+        else
+        {
+            message = "Erreur dans la saisie de votre actif, veuillez vérifier vos champs.";
+        }
+    }
+
+    // Vente de l'actif
+    private void VendreAsset()
+    {
+        if (!string.IsNullOrWhiteSpace(newAsset.Ticker) && newAsset.Quantite > 0)
+        {
+            // Create a new asset instance to pass to the selling method
+            Asset assetToSell = new Asset
+            {
+                Ticker = newAsset.Ticker,
+                Quantite = newAsset.Quantite
+            };
+
+            try
+            {
+                PortfolioService.VendreAsset(assetToSell, newAsset.Quantite); // Call the VendreAsset method
+                PortfolioService.AddCash(newAsset.BuyPrice * newAsset.Quantite);
+                message = "Actif vendu avec succès.";
+            }
+            catch (InvalidOperationException ex)
+            {
+                message = ex.Message; // Display the error message
+            }
+        }
+        else
+        {
+            message = "Veuillez sélectionner un actif et entrer une quantité valide.";
+        }
+    }
+
+    // Vente totale de l'actif 
+    private void SupprimerAsset(string nom)
+    {
+        try
+        {
+            PortfolioService.SupprimerAsset(nom);
+            PortfolioService.AddCash(cashAmount);
+            message = "Actif vendu en totalité avec succès.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            message = ex.Message;  // Afficher l'erreur
+        }
+        catch (Exception ex) // Pour capturer d'autres types d'exceptions
+        {
+            message = "Portefeuille vide"; // Gérer les autres erreurs
+        }
+    }
+
+    private decimal cashAmount; // Niveau de cash entrée par l'utilisateur
+
+    // Addition de cash
+    private void AjouterCash()
+    {
+        if (cashAmount > 0)
+        {
+            PortfolioService.AddCash(cashAmount);
+            cashAmount = 0; // Réinitialiser le champ après ajout
+            messagecash = "Le montant a été ajouté avec succès.";
+        }
+        else
+        {
+            messagecash = "Le montant à ajouter doit être supérieur à zéro.";
+        }
+    }
+
+    // Soustraction de cash
+    private void RetirerCash()
+    {   
+        if (@PortfolioService.CashAmount() < cashAmount)
+        {
+            messagecash = "Le montant à retirer doit être inférieur au montant disponible.";
+        }
+        else if (cashAmount > 0)
+        {
+            PortfolioService.SubtractCash(cashAmount);
+            cashAmount = 0; // Réinitialiser le champ après soustraction
+            messagecash = "Le montant a été retiré avec succès.";
+        }
+        else
+        {
+            messagecash = "Le montant à retirer doit être supérieur à zéro.";
+        }
+    }
+}
+
+

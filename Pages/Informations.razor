@@ -1,0 +1,46 @@
+﻿@page "/Informations"
+
+@using PortfolioTracking.Models
+@using PortfolioTracking.Services
+@using PortfolioTracking.Component
+
+<PageTitle>Informations</PageTitle>
+
+<h2>Mode d'utilisation</h2>
+
+<body>
+    <ul>
+        <li><strong>Etape 1</strong> : Ajouter un montant de cash initial</li>
+        <li><strong>Etape 2</strong> : Acheter des actifs</li>
+        <li><strong>Etape 3</strong> : Rebalancement du portefeuille</li>
+    </ul>
+</body>
+
+<h2>Fonctionnalité des boutons</h2>
+
+<body>
+    <ul>
+        <li><strong>Ajouter Cash</strong> : Permet d'ajouter un montant de cash dans le portefeuille</li>
+        <li><strong>Retirer Cash</strong> : Permet de retirer un montant de cash du portefeuille</li>
+        <li><strong>Acheter un Actif</strong> : Permet d'acheter un actif selon le niveau de cash présent dans le portefeuille et le prix d'achat</li>
+        <li><strong>Vendre un Actif</strong> : Permet de vendre un actif du portefeuille et donc de récupérer du cash selon le prix de vente</li>
+        <li><strong>Supprimer</strong> : Permet de vendre la totalité d'un actif du portefeuille et donc de récupérer la totalité du cash allouée à cet actif</li>
+    </ul>
+</body>
+
+
+<h2>Conclusion</h2>
+<p>
+    En conclusion, ce projet visant à calculer la valeur d'un portefeuille nous a permis de pratiquer le C# orienté objet tout en découvrant le JavaScript et le HTML. Notre objectif initial était d'offrir à l'utilisateur la possibilité de déterminer la valeur de son portefeuille en choisissant différents actifs à partir d'une base de données.
+</p>
+<p>
+    Au fil du développement, nous avons identifié une limite significative : l'interface utilisateur. En effet, une question s'est posée : comment permettre à l'utilisateur de sélectionner le contenu de son portefeuille sans une interface conviviale ? Sans interface, l'utilisateur aurait dû interagir directement avec le code pour obtenir la valeur de son portefeuille, ce qui n'est pas pratique.
+</p>
+<p>
+    Cette problématique nous a conduits à concevoir et à mettre en place une interface utilisateur. Nous avons ainsi pu pratiquer le C# orienté objet en développant les classes pour les actifs/cash et le portefeuille, tout en utilisant les données de manière efficace. Par la suite, nous avons intégré le JavaScript et le HTML pour créer une interface visuelle, ce qui a enrichi notre projet en ajoutant des graphiques. Ces éléments visuels permettent à l'utilisateur d'obtenir des informations supplémentaires, l'aidant ainsi dans sa prise de décision lors de la construction de son portefeuille.
+</p>
+
+
+
+
+<!-- Contenu de la page de Informations -->

@@ -1,0 +1,81 @@
+﻿@page "/"
+
+<PageTitle>Accueil</PageTitle>
+
+<title>Cahier des Charges</title>
+<h2>Application de Gestion de Portefeuille d’Actions 2024-2025</h2>
+<p>
+    <strong>KRETZ Henri</strong><br>
+    <strong>LIN Cécile</strong><br>
+    <strong>MONTARIOL Enzo</strong><br>
+
+</p>
+
+<h2>1. Contexte du projet</h2>
+<p>L’application de gestion de portefeuille d’actions est une solution logicielle simple permettant à un utilisateur de simuler l’achat et la vente d’actions, de suivre la valeur de son portefeuille et d’évaluer ses gains et pertes. Elle est conçue pour les personnes souhaitant se familiariser avec la gestion de portefeuilles financiers.</p>
+
+<h2>2. Objectifs</h2>
+<p>L’objectif principal est de développer une application intuitive et efficace pour :</p>
+<ul>
+    <li>Gérer un portefeuille d’actions (ajouter, supprimer, acheter, vendre des actions).</li>
+    <li>Calculer la valeur totale du portefeuille.</li>
+    <li>Suivre les gains et pertes réalisés.</li>
+    <li>Importer et exporter des données de portefeuille via des fichiers CSV.</li>
+</ul>
+
+<h2>3. Cahier fonctionnel</h2>
+
+<h3>3.1 Fonctionnalités principales</h3>
+<p>L’application doit offrir les fonctionnalités suivantes :</p>
+<ul>
+    <li><strong>Ajout/Suppression d’actions :</strong> L’utilisateur doit pouvoir ajouter ou supprimer des actions dans son portefeuille avec des informations sur le nom, le prix et la quantité.</li>
+    <li><strong>Achat/Vente d’actions :</strong> Permettre la simulation d’opérations d’achat et de vente en modifiant les quantités d’actions et en mettant à jour leur prix.</li>
+    <li><strong>Calcul des gains/pertes :</strong> Afficher la valeur totale actuelle du portefeuille, ainsi que les gains ou pertes cumulés.</li>
+    <li><strong>Import/Export CSV :</strong> L’utilisateur doit pouvoir importer un fichier CSV contenant la liste des actions et leurs détails, et exporter les données actuelles du portefeuille vers un fichier CSV.</li>
+</ul>
+
+<h3>3.2 Interface Utilisateur</h3>
+<p>L’interface utilisateur sera développée à l’aide de WinForms ou WPF (au choix) et devra comporter :</p>
+<ul>
+    <li>Un tableau affichant les actions dans le portefeuille avec leurs noms, quantités, prix et valeurs actuelles.</li>
+    <li>Des boutons pour ajouter, supprimer, acheter et vendre des actions.</li>
+    <li>Des boutons pour importer et exporter les données du portefeuille sous format CSV.</li>
+    <li>Une zone d’affichage des statistiques du portefeuille (valeur totale, gains/pertes).</li>
+</ul>
+
+<h2>4. Spécifications techniques</h2>
+
+<h3>4.1 Environnement de développement</h3>
+<ul>
+    <li><strong>Langage :</strong> C#</li>
+    <li><strong>Framework :</strong> .NET avec WinForms ou WPF</li>
+    <li><strong>Base de données :</strong> Aucune base de données n’est nécessaire, les données seront gérées en mémoire et via des fichiers CSV.</li>
+</ul>
+
+<h3>4.2 Structure des fichiers CSV</h3>
+<p>Les fichiers CSV contiendront les informations suivantes :</p>
+<ul>
+    <li>Nom de l’action</li>
+    <li>Prix unitaire d’achat</li>
+    <li>Quantité détenue</li>
+    <li>Date de l’opération</li>
+</ul>
+
+<h2>5. Planning</h2>
+<p>Le projet sera divisé en quatre phases :</p>
+<ul>
+    <li>Phase 1 : Création des classes principales Action et Portefeuille.</li>
+    <li>Phase 2 : Développement de l’interface graphique et des formulaires de gestion.</li>
+    <li>Phase 3 : Implémentation des fonctionnalités d’import/export CSV.</li>
+    <li>Phase 4 : Test des fonctionnalités et ajustements.</li>
+</ul>
+
+<h2>6. Livrables attendus</h2>
+<ul>
+    <li>Code source complet de l’application.</li>
+    <li>Fichiers CSV d’exemple pour l’import/export.</li>
+    <li>Documentation technique expliquant les choix de conception.</li>
+</ul>
+
+<h2>7. Conclusion</h2>
+<p>Ce projet permet de combiner des concepts financiers avec le développement logiciel, en offrant une première approche de la gestion de portefeuilles et des opérations sur actions. Il s’agit d’un projet adapté à la finance et du développement en C#.</p>

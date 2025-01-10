@@ -1,0 +1,54 @@
+﻿@page "/Analyse"
+
+@using PortfolioTracking.Models
+@using PortfolioTracking.Services
+@using PortfolioTracking.Component
+
+@inject PortfolioService PortfolioService
+
+<PageTitle>Analyse du Portefeuille</PageTitle>
+
+<h1>Analyse du Portefeuille</h1>
+
+<!-- Composant pour afficher le Pie Chart -->
+
+<PortfolioPieChart />
+
+<h3>Actifs dans le Portefeuille</h3>
+
+<head>
+    <style>
+        .table td, .table th {
+            text-align: center; /* Centre le texte dans les cellules de la table */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th>Ticker</th>
+                    <th>Prix</th>
+                    <th>Date du Prix (F)</th>
+                    <th>Quantité</th>
+                    <th>Valeur absolue</th>
+                    <th>Valeur relative</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                @foreach (var asset in PortfolioService.GetAssets())
+                {
+                    <tr>
+                        <td>@asset.Ticker</td>
+                        <td>@Math.Round(asset.BuyPrice, 2) $</td>
+                        <td>@asset.DatePrice.ToShortDateString()</td>
+                        <td>@asset.Quantite</td>
+                        <td>@Math.Round(asset.ValeurTotalActif, 2) $</td>
+                        <td>@Math.Round((asset.ValeurTotalActif / PortfolioService.ValeurTotale()) * 100, 2)%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
