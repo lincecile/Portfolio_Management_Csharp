@@ -1,0 +1,22 @@
+﻿@using PortfolioTracking.Models
+@using PortfolioTracking.Services
+@inject PortfolioService PortfolioService
+@inject IJSRuntime JS
+
+<div>
+    <canvas id="portfolioPieChart" width="400" height="400"></canvas>
+</div>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var assets = PortfolioService.GetAssets(); // la liste des actifs
+            if (assets != null && assets.Count > 0) // Vérifiez qu'il y a des actifs
+            {
+                JS.InvokeVoidAsync("createPieChart", assets); // Pie Chart
+            }
+        }
+    }
+}

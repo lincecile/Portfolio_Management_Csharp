@@ -1,0 +1,32 @@
+﻿@using PortfolioTracking.Models
+@using PortfolioTracking.Services
+@inject PortfolioService PortfolioService
+@inject IJSRuntime JS
+
+<div>
+    <canvas id="portfolioLineChart" width="400" height="400"></canvas>
+</div>
+
+@code {
+    [Parameter]
+    public string TickerSelected { get; set; } // ticker choisi par l'utilisateur
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("TickerSelected in OnParametersSet: " + TickerSelected);
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        var assets = await PortfolioService.GetCsvContent(TickerSelected); // Obtient la donnée dans l'utilisateur choisi un ticker
+
+        if (assets != null) // Vérifiez qu'il y a un actif
+        {
+            await JS.InvokeVoidAsync("createLineChart", assets, TickerSelected); // Graph
+        }
+        else
+        {
+            Console.WriteLine("Assets are null or empty.");
+        }
+    }
+}
